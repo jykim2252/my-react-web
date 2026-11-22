@@ -1,100 +1,120 @@
-#root {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px 16px;
-  box-sizing: border-box;
-}
-
+/* Layout & Global */
 body {
   margin: 0;
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: #e0f2fe; /* 연한 파란색 (Sky 100) */
+  background-color: #e0f2fe; /* 연한 파란색 */
   color: #0f172a;
 }
 
-.container {
-  width: 100%;
-  max-width: 580px;
-  margin: 0 auto;
-  padding: 40px 28px;
-  text-align: center;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.08);
-  box-sizing: border-box;
+#root {
+  min-height: 100vh;
 }
 
-.logo {
-  font-size: 52px;
-  margin-bottom: 8px;
-}
-
-h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 8px 0 6px;
-  word-break: keep-all;
-}
-
-.welcome-text {
-  font-size: 20px;
-  font-weight: 700;
-  color: #0284c7;
-  margin: 6px 0 12px;
-}
-
-.subtitle {
-  color: #64748b;
-  font-size: 15px;
-  margin: 0 0 24px;
-}
-
-.greeting-section {
+.app-layout {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Navbar (진한 남색 배경) */
+.navbar {
+  background-color: #0f172a; /* 진한 남색 */
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 64px;
+  display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 20px 0 28px;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.greet-btn {
-  background: #0284c7;
-  font-weight: 600;
-  padding: 12px 28px;
-  border-radius: 10px;
-  transition: all 0.2s ease;
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
 }
 
-.greet-btn:hover {
-  background: #0369a1;
-  transform: translateY(-1px);
+.navbar-brand:hover {
+  opacity: 0.9;
 }
 
-.greeting-message {
-  width: 100%;
-  max-width: 460px;
-  padding: 14px 18px;
-  background: #f0fdf4;
-  border: 1px solid #86efac;
-  color: #166534;
-  border-radius: 10px;
+.brand-icon {
+  font-size: 22px;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  color: #cbd5e1;
+  text-decoration: none;
   font-size: 15px;
   font-weight: 500;
-  line-height: 1.5;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* 현재 선택된 메뉴 구분 */
+.nav-link.active {
+  color: #ffffff;
+  background-color: #2563eb; /* 선명한 파란색 포인트 */
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+}
+
+/* Main Content Area */
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 16px 60px;
   box-sizing: border-box;
-  animation: fadeIn 0.3s ease-in-out;
-  word-break: keep-all;
+}
+
+/* Page Card (공통 카드) */
+.page-card {
+  width: 100%;
+  max-width: 680px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 44px 32px;
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
+  text-align: center;
+  animation: fadeIn 0.3s ease-out;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -102,98 +122,334 @@ h1 {
   }
 }
 
-.counter {
-  padding: 24px;
-  margin: 24px 0 16px;
+.page-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.page-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 10px 0 12px;
+  word-break: keep-all;
+  line-height: 1.35;
+}
+
+.page-description {
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 28px;
+  word-break: keep-all;
+}
+
+/* Home Page */
+.greeting-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 32px;
+}
+
+.greet-btn {
+  font-size: 16px;
+  padding: 12px 28px;
+}
+
+.greeting-message {
+  width: 100%;
+  max-width: 480px;
+  padding: 14px 20px;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  color: #166534;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  animation: fadeIn 0.25s ease-out;
+  word-break: keep-all;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  text-align: left;
+  margin-top: 24px;
+}
+
+.feature-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 16px;
+}
+
+.feature-item h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.feature-item p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* About Page */
+.about-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+  margin-top: 20px;
+}
+
+.about-item {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 14px;
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.counter p {
+.about-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+}
+
+.about-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.about-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #0f172a;
+}
+
+.badge {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+}
+
+.about-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* Practice Page */
+.counter-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 32px 20px;
+  margin: 20px 0 10px;
+}
+
+.counter-label {
   margin: 0;
   font-size: 15px;
   color: #64748b;
+  font-weight: 500;
 }
 
-.counter h2 {
-  font-size: 44px;
-  margin: 10px 0 16px;
+.counter-display {
+  font-size: 52px;
+  font-weight: 700;
   color: #2563eb;
+  margin: 12px 0 24px;
 }
 
-.buttons {
+/* Contact Page */
+.contact-form {
+  max-width: 440px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-field:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.welcome-banner {
+  margin-top: 28px;
+  padding: 20px;
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 12px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.welcome-banner h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #1e40af;
+}
+
+.welcome-banner p {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: #1e3a8a;
+}
+
+.notice-tag {
+  display: inline-block;
+  font-size: 12px;
+  color: #60a5fa;
+  background: #ffffff;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* Common Buttons */
+.button-group {
   display: flex;
   gap: 12px;
   justify-content: center;
 }
 
-button {
+.btn {
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
-  background: #2563eb;
-  color: white;
-  cursor: pointer;
   font-size: 15px;
   font-weight: 600;
-  transition: background 0.15s ease, transform 0.1s ease;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-button:hover {
-  background: #1d4ed8;
-}
-
-button:active {
+.btn:active {
   transform: scale(0.98);
 }
 
-button.reset {
-  background: #64748b;
+.btn-primary {
+  background-color: #2563eb;
+  color: #ffffff;
 }
 
-button.reset:hover {
-  background: #475569;
+.btn-primary:hover {
+  background-color: #1d4ed8;
 }
 
-footer {
-  margin-top: 28px;
-  font-size: 14px;
+.btn-secondary {
+  background-color: #64748b;
+  color: #ffffff;
+}
+
+.btn-secondary:hover {
+  background-color: #475569;
+}
+
+/* Footer (하단 Footer) */
+.footer {
+  background-color: #0f172a;
   color: #94a3b8;
+  padding: 24px 20px;
+  text-align: center;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-@media (max-width: 480px) {
-  .container {
+.footer-container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.footer-title {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.footer-copy {
+  margin: 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+  .navbar-container {
+    height: auto;
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .nav-menu {
+    width: 100%;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  .main-content {
+    padding: 24px 12px 40px;
+  }
+
+  .page-card {
     padding: 28px 18px;
     border-radius: 16px;
   }
 
-  h1 {
+  .page-title {
     font-size: 22px;
   }
 
-  .welcome-text {
-    font-size: 18px;
+  .feature-grid {
+    grid-template-columns: 1fr;
   }
 
-  .subtitle {
-    font-size: 14px;
-  }
-
-  .counter {
-    padding: 20px 14px;
-  }
-
-  .counter h2 {
-    font-size: 36px;
-  }
-
-  .buttons {
+  .button-group {
     flex-direction: column;
-    gap: 8px;
   }
 
-  button, .greet-btn {
+  .btn {
     width: 100%;
   }
 }
