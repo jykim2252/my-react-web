@@ -5,6 +5,12 @@ import { useState } from 'react'
  */
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+/**
+ * Web3Forms 무료 Access Key (환경변수 또는 직접 입력)
+ * https://web3forms.com 에서 이메일 입력 후 무료로 즉시 발급받을 수 있습니다.
+ */
+const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "5c25bf5c-1282-449b-b2ed-ff62d7b1064e"
+
 function Contact() {
   const [formData, setFormData] = useState({
     name: '',
@@ -81,7 +87,43 @@ function Contact() {
     setServerError('')
     setSuccessMessage('')
 
-    // 로컬 개발 환경인 경우 Express 백엔드 API 호출
+    // Web3Forms Access Key가 설정되어 있는 경우 실제 이메일 발송
+    if (WEB3FORMS_ACCESS_KEY) {
+      setIsSubmitting(true)
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_ACCESS_KEY,
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            message: formData.message.trim(),
+            from_name: '나의 AI 웹사이트',
+            subject: `[새 문의 접수] ${formData.name.trim()}님의 문의`,
+          }),
+        })
+
+        const result = await response.json().catch(() => null)
+
+        if (response.ok && result?.success) {
+          setSuccessMessage('문의가 정상적으로 접수되었습니다. 담당자 이메일로 전송되었습니다.')
+          setFormData({ name: '', email: '', message: '' })
+        } else {
+          setServerError(result?.message || '이메일 전송에 실패했습니다. 잠시 후 다시 시도해 주세요.')
+        }
+      } catch {
+        setServerError('서버에 연결할 수 없습니다. 네트워크 상태를 확인해 주세요.')
+      } finally {
+        setIsSubmitting(false)
+      }
+      return
+    }
+
+    // Access Key가 없을 때: 로컬 개발 환경이면 Express 서버 호출, 배포 환경이면 검증 완료 메시지 표시
     if (import.meta.env.DEV) {
       setIsSubmitting(true)
       try {
@@ -106,7 +148,7 @@ function Contact() {
         setIsSubmitting(false)
       }
     } else {
-      // GitHub Pages 배포 환경: Node.js 서버 실행 불가하므로 클라이언트 검증 완료 메시지 표시
+      // GitHub Pages 배포 환경에서 Access Key 미설정 시 기본 메시지 표시
       setSuccessMessage('문의가 정상적으로 접수되었습니다.')
     }
   }
@@ -227,14 +269,14 @@ function Contact() {
         </div>
       </form>
 
-      {/* 서버 에러 메시지 알림 배너 */}
+      {/* 서버/발송 에러 메시지 알림 배너 */}
       {serverError && (
         <div className="server-error-banner" role="alert">
           ⚠️ {serverError}
         </div>
       )}
 
-      {/* 검증 완료 성공 메시지 알림 배너 */}
+      {/* 검증/전송 완료 성공 메시지 알림 배너 */}
       {successMessage && (
         <div className="success-banner" role="status" aria-live="polite">
           {successMessage}
