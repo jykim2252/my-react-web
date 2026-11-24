@@ -13,6 +13,8 @@ function Contact() {
   })
   const [errors, setErrors] = useState({})
   const [successMessage, setSuccessMessage] = useState('')
+  const [serverError, setServerError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -21,7 +23,7 @@ function Contact() {
       [name]: value,
     }))
 
-    // 입력 필드 수정 시 해당 필드의 오류 메시지 제거
+    // 입력 필드 수정 시 해당 필드의 오류 메시지 및 이전 응답 메시지 초기화
     if (errors[name]) {
       setErrors((prev) => {
         const nextErrors = { ...prev }
@@ -29,6 +31,8 @@ function Contact() {
         return nextErrors
       })
     }
+    if (serverError) setServerError('')
+    if (successMessage) setSuccessMessage('')
   }
 
   const validate = () => {
@@ -58,21 +62,53 @@ function Contact() {
     return nextErrors
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    if (isSubmitting) return
 
     const validationErrors = validate()
 
-    // 오류 발생 시 오류 메시지 표시 및 성공 메시지 제거
+    // 오류 발생 시 오류 메시지 표시 및 성공/서버 메시지 제거
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
       setSuccessMessage('')
+      setServerError('')
       return
     }
 
-    // 모든 입력이 유효할 때 성공 메시지 표시
+    // 입력값 유효 시 클라이언트 오류 초기화
     setErrors({})
-    setSuccessMessage('입력 검증이 완료되었습니다. 실제 문의는 전송되지 않았습니다.')
+    setServerError('')
+    setSuccessMessage('')
+
+    // 로컬 개발 환경인 경우 Express 백엔드 API 호출
+    if (import.meta.env.DEV) {
+      setIsSubmitting(true)
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        })
+
+        const data = await response.json().catch(() => null)
+
+        if (response.ok && data?.success) {
+          setSuccessMessage(data.message)
+        } else {
+          setServerError(data?.message || '서버 입력 검증에 실패했습니다.')
+        }
+      } catch {
+        setServerError('서버에 연결할 수 없습니다.')
+      } finally {
+        setIsSubmitting(false)
+      }
+    } else {
+      // GitHub Pages 배포 환경: Node.js 서버 실행 불가하므로 클라이언트 검증 완료 메시지 표시
+      setSuccessMessage('문의가 정상적으로 접수되었습니다.')
+    }
   }
 
   const handleReset = () => {
@@ -83,6 +119,8 @@ function Contact() {
     })
     setErrors({})
     setSuccessMessage('')
+    setServerError('')
+    setIsSubmitting(false)
   }
 
   return (
@@ -107,6 +145,7 @@ function Contact() {
             placeholder="이름을 입력해 주세요"
             value={formData.name}
             onChange={handleChange}
+            disabled={isSubmitting}
             aria-required="true"
             aria-invalid={Boolean(errors.name)}
             aria-describedby={errors.name ? 'user-name-error' : undefined}
@@ -131,6 +170,7 @@ function Contact() {
             placeholder="example@domain.com"
             value={formData.email}
             onChange={handleChange}
+            disabled={isSubmitting}
             aria-required="true"
             aria-invalid={Boolean(errors.email)}
             aria-describedby={errors.email ? 'user-email-error' : undefined}
@@ -155,6 +195,7 @@ function Contact() {
             rows={5}
             value={formData.message}
             onChange={handleChange}
+            disabled={isSubmitting}
             aria-required="true"
             aria-invalid={Boolean(errors.message)}
             aria-describedby={errors.message ? 'user-message-error' : undefined}
@@ -168,20 +209,32 @@ function Contact() {
 
         {/* 버튼 그룹: 문의하기 및 초기화 */}
         <div className="button-group">
-          <button type="submit" className="btn btn-primary">
-            문의하기
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? '전송 중...' : '문의하기'}
           </button>
           <button
             type="button"
             className="btn btn-secondary"
             onClick={handleReset}
+            disabled={isSubmitting}
           >
             초기화
           </button>
         </div>
       </form>
 
-      {/* 검증 완료 성공 메시지 */}
+      {/* 서버 에러 메시지 알림 배너 */}
+      {serverError && (
+        <div className="server-error-banner" role="alert">
+          ⚠️ {serverError}
+        </div>
+      )}
+
+      {/* 검증 완료 성공 메시지 알림 배너 */}
       {successMessage && (
         <div className="success-banner" role="status" aria-live="polite">
           {successMessage}

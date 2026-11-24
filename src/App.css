@@ -362,6 +362,21 @@ body {
   animation: fadeIn 0.3s ease-out;
 }
 
+.server-error-banner {
+  margin-top: 24px;
+  padding: 16px 20px;
+  background-color: #fef2f2;
+  border: 1.5px solid #fecaca;
+  border-radius: 12px;
+  color: #b91c1c;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  word-break: keep-all;
+  animation: fadeIn 0.3s ease-out;
+}
+
 .welcome-banner {
   margin-top: 28px;
   padding: 20px;
@@ -412,6 +427,12 @@ body {
 
 .btn:active {
   transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .btn-primary {
